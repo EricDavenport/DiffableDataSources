@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ItemFeedController: UIViewController {
   
   private var tableView: UITableView!
   private var dataSource: DataSource!   // the subclass we created
@@ -62,15 +62,18 @@ class ViewController: UIViewController {
   }
   
   @objc private func toggleEditState() {
-//    tableView.isEditing = true ? fal
+    // true -> false -> true
+    tableView.setEditing(!tableView.isEditing, animated: true)
+    navigationItem.leftBarButtonItem?.title = tableView.isEditing ? "Done" : "Edit"
   }
   
   @objc private func presentAddVC() {
-    let sb = UIStoryboard(name: "Main", bundle: nil)
-    let addItemVC = sb.instantiateViewController(identifier: "AddItemViewController") { (coder)  in
-      return AddItemViewController(coder: coder)
+    guard let addItemVC = storyboard?.instantiateViewController(identifier: "AddItemViewController") as? AddItemViewController else {
+      return
     }
-    navigationController?.pushViewController(addItemVC, animated: true)
+    addItemVC.delegate = self
+    present(addItemVC, animated: true)
+    
     
     // TODO:
     // 1. create an AddItemViewController.swift file
@@ -85,11 +88,14 @@ class ViewController: UIViewController {
 
 }
 
-extension ViewController: AddItemViewControllerDelegate {
-  func didAddItem(item: Item) {
+extension ItemFeedController: AddItemViewControllerDelegate {
+  func didAddItem(item: Item, vc: AddItemViewController) {
     print("Delegate active")
-//    var snapshot = dataSource.snapshot()
-//    snapshot.appendItems([item], toSection: item.category)
-//    dataSource.apply(snapshot, animatingDifferences: true)
+    var snapshot = dataSource.snapshot()
+    snapshot.appendItems([item], toSection: item.category)
+    
+    // no need for reloadData()
+    // no need for property
+    dataSource.apply(snapshot, animatingDifferences: true)
   }
 }

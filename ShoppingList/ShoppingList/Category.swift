@@ -16,4 +16,6 @@ enum Category: String, CaseIterable {
   case health = "Health"
   case gaming = "Gaming"
   case shoppingCart = "Cart"
+  
+//  static var count { return C}
 }
