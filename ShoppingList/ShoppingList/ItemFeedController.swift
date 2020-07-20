@@ -38,7 +38,9 @@ class ItemFeedController: UIViewController {
   private func configureDataSource() {
     dataSource = DataSource(tableView: tableView, cellProvider: { (tableView, indexPath, item) -> UITableViewCell? in
       let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-      cell.textLabel?.text = "\(item.name)"
+      let formattedPrice = String(format: "%.2f", item.price)
+      cell.textLabel?.text = "\(item.name)\nPrice: $\(formattedPrice)"
+      cell.textLabel?.numberOfLines = 0
       return cell
     })
     
